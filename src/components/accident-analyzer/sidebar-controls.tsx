@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from 'react';
-import { CarCrash, Upload, MapPin, SlidersHorizontal } from 'lucide-react';
+import { Siren, Upload, MapPin, SlidersHorizontal } from 'lucide-react';
 import {
   SidebarHeader,
   SidebarContent,
@@ -65,7 +65,7 @@ export default function SidebarControls({
     <>
       <SidebarHeader>
         <div className="flex items-center gap-3 p-2">
-          <CarCrash className="h-8 w-8 text-primary" />
+          <Siren className="h-8 w-8 text-primary" />
           <h1 className="text-2xl font-bold font-headline">Accident Analyzer</h1>
         </div>
       </SidebarHeader>
