@@ -64,6 +64,7 @@ export default function SidebarControls({
                 role="combobox"
                 aria-expanded={open}
                 className="w-full justify-between"
+                disabled={isApiKeyMissing}
               >
                 {selectedRegion
                   ? regions.find((region) => region.id === selectedRegion.id)?.name
@@ -120,6 +121,7 @@ export default function SidebarControls({
                 step={0.05}
                 value={[params.epsilon]}
                 onValueChange={(value) => onParamsChange({ ...params, epsilon: value[0] })}
+                disabled={isApiKeyMissing}
               />
             </div>
             <div className="space-y-2">
@@ -134,6 +136,7 @@ export default function SidebarControls({
                 step={1}
                 value={[params.minPts]}
                 onValueChange={(value) => onParamsChange({ ...params, minPts: value[0] })}
+                disabled={isApiKeyMissing}
               />
             </div>
           </div>
