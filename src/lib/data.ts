@@ -4,6 +4,9 @@ export const regions: Region[] = [
   { id: 'sf', name: 'San Francisco', center: { lat: 37.7749, lng: -122.4194 }, zoom: 12 },
   { id: 'nyc', name: 'New York City', center: { lat: 40.7128, lng: -74.0060 }, zoom: 11 },
   { id: 'london', name: 'London', center: { lat: 51.5074, lng: -0.1278 }, zoom: 11 },
+  { id: 'tokyo', name: 'Tokyo', center: { lat: 35.6895, lng: 139.6917 }, zoom: 11 },
+  { id: 'paris', name: 'Paris', center: { lat: 48.8566, lng: 2.3522 }, zoom: 12 },
+  { id: 'sydney', name: 'Sydney', center: { lat: -33.8688, lng: 151.2093 }, zoom: 11 },
 ];
 
 const factors = ["speeding", "poor visibility", "road design", "distracted driving", "weather conditions", "traffic congestion"];
@@ -31,6 +34,9 @@ export const accidentData: Record<string, Accident[]> = {
   sf: generateAccidents(regions[0], 500),
   nyc: generateAccidents(regions[1], 800),
   london: generateAccidents(regions[2], 600),
+  tokyo: generateAccidents(regions[3], 900),
+  paris: generateAccidents(regions[4], 550),
+  sydney: generateAccidents(regions[5], 450),
 };
 
 const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
