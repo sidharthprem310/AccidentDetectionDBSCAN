@@ -11,6 +11,7 @@ export const regions: Region[] = [
   { id: 'mumbai', name: 'Mumbai, India', center: { lat: 19.0760, lng: 72.8777 }, zoom: 11 },
   { id: 'bangalore', name: 'Bangalore, India', center: { lat: 12.9716, lng: 77.5946 }, zoom: 11 },
   { id: 'kochi', name: 'Kochi, India', center: { lat: 9.9312, lng: 76.2673 }, zoom: 12 },
+  { id: 'trivandrum', name: 'Trivandrum, India', center: { lat: 8.5241, lng: 76.9366 }, zoom: 12 },
   { id: 'cairo', name: 'Cairo, Egypt', center: { lat: 30.0444, lng: 31.2357 }, zoom: 11 },
   { id: 'rio', name: 'Rio de Janeiro, Brazil', center: { lat: -22.9068, lng: -43.1729 }, zoom: 11 },
 ];
@@ -47,8 +48,9 @@ export const accidentData: Record<string, Accident[]> = {
   mumbai: generateAccidents(regions[7], 850),
   bangalore: generateAccidents(regions[8], 700),
   kochi: generateAccidents(regions[9], 400),
-  cairo: generateAccidents(regions[10], 650),
-  rio: generateAccidents(regions[11], 600),
+  trivandrum: generateAccidents(regions[10], 350),
+  cairo: generateAccidents(regions[11], 650),
+  rio: generateAccidents(regions[12], 600),
 };
 
 const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
