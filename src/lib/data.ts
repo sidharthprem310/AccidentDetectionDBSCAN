@@ -7,6 +7,12 @@ export const regions: Region[] = [
   { id: 'tokyo', name: 'Tokyo', center: { lat: 35.6895, lng: 139.6917 }, zoom: 11 },
   { id: 'paris', name: 'Paris', center: { lat: 48.8566, lng: 2.3522 }, zoom: 12 },
   { id: 'sydney', name: 'Sydney', center: { lat: -33.8688, lng: 151.2093 }, zoom: 11 },
+  { id: 'delhi', name: 'Delhi, India', center: { lat: 28.7041, lng: 77.1025 }, zoom: 11 },
+  { id: 'mumbai', name: 'Mumbai, India', center: { lat: 19.0760, lng: 72.8777 }, zoom: 11 },
+  { id: 'bangalore', name: 'Bangalore, India', center: { lat: 12.9716, lng: 77.5946 }, zoom: 11 },
+  { id: 'kochi', name: 'Kochi, India', center: { lat: 9.9312, lng: 76.2673 }, zoom: 12 },
+  { id: 'cairo', name: 'Cairo, Egypt', center: { lat: 30.0444, lng: 31.2357 }, zoom: 11 },
+  { id: 'rio', name: 'Rio de Janeiro, Brazil', center: { lat: -22.9068, lng: -43.1729 }, zoom: 11 },
 ];
 
 const factors = ["speeding", "poor visibility", "road design", "distracted driving", "weather conditions", "traffic congestion"];
@@ -37,6 +43,12 @@ export const accidentData: Record<string, Accident[]> = {
   tokyo: generateAccidents(regions[3], 900),
   paris: generateAccidents(regions[4], 550),
   sydney: generateAccidents(regions[5], 450),
+  delhi: generateAccidents(regions[6], 750),
+  mumbai: generateAccidents(regions[7], 850),
+  bangalore: generateAccidents(regions[8], 700),
+  kochi: generateAccidents(regions[9], 400),
+  cairo: generateAccidents(regions[10], 650),
+  rio: generateAccidents(regions[11], 600),
 };
 
 const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
