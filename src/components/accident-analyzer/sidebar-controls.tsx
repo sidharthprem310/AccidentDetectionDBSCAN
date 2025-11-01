@@ -1,7 +1,8 @@
+
 "use client";
 
-import React, { useRef } from 'react';
-import { Siren, Upload, MapPin, SlidersHorizontal } from 'lucide-react';
+import React from 'react';
+import { Siren, Check, ChevronsUpDown, MapPin, SlidersHorizontal } from 'lucide-react';
 import {
   SidebarHeader,
   SidebarContent,
@@ -9,19 +10,13 @@ import {
   SidebarGroupLabel,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/hooks/use-toast';
 import type { Region } from '@/lib/types';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
+import { cn } from '@/lib/utils';
 
 interface SidebarControlsProps {
   regions: Region[];
@@ -44,22 +39,7 @@ export default function SidebarControls({
   isAnalyzing,
   isApiKeyMissing,
 }: SidebarControlsProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { toast } = useToast();
-
-  const handleFileUploadClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const fileName = event.target.files[0].name;
-      toast({
-        title: "File Uploaded (Simulated)",
-        description: `${fileName} is ready for analysis.`,
-      });
-    }
-  };
+  const [open, setOpen] = React.useState(false)
 
   return (
     <>
@@ -73,46 +53,52 @@ export default function SidebarControls({
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="flex items-center gap-2">
-            <Upload className="h-4 w-4" />
-            Data Upload
-          </SidebarGroupLabel>
-          <div className="p-2">
-            <Input
-              type="file"
-              className="hidden"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept=".csv"
-            />
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={handleFileUploadClick}
-            >
-              Upload CSV File
-            </Button>
-            <p className="text-xs text-muted-foreground mt-2">Upload accident datasets (e.g., from Kaggle).</p>
-          </div>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel className="flex items-center gap-2">
             <MapPin className="h-4 w-4" />
-            Region Selection
+            Location Search
           </SidebarGroupLabel>
           <div className="p-2">
-            <Select value={selectedRegion.id} onValueChange={onRegionChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a region" />
-              </SelectTrigger>
-              <SelectContent>
-                {regions.map((region) => (
-                  <SelectItem key={region.id} value={region.id}>
-                    {region.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="w-full justify-between"
+              >
+                {selectedRegion
+                  ? regions.find((region) => region.id === selectedRegion.id)?.name
+                  : "Select a region..."}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[300px] p-0">
+              <Command>
+                <CommandInput placeholder="Search region..." />
+                <CommandEmpty>No region found.</CommandEmpty>
+                <CommandGroup>
+                  {regions.map((region) => (
+                    <CommandItem
+                      key={region.id}
+                      value={region.name}
+                      onSelect={() => {
+                        onRegionChange(region.id)
+                        setOpen(false)
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          selectedRegion.id === region.id ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {region.name}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
+          <p className="text-xs text-muted-foreground mt-2">Search for a city to analyze accident hotspots.</p>
           </div>
         </SidebarGroup>
 
