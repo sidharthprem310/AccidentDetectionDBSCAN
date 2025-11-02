@@ -8,7 +8,6 @@ import HotspotDetails from '@/components/accident-analyzer/hotspot-details';
 import { accidentData, regions, simulateDbscan } from '@/lib/data';
 import type { Region, Hotspot } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
-import ApiKeyWarning from './api-key-warning';
 
 export default function Dashboard() {
   const [region, setRegion] = useState<Region>(regions[0]);
@@ -18,8 +17,6 @@ export default function Dashboard() {
   const [isAnalyzing, startAnalysis] = useTransition();
   const { toast } = useToast();
   
-  const isApiKeyMissing = !process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
   const handleRunAnalysis = useCallback(() => {
     startAnalysis(() => {
       const points = accidentData[region.id];
@@ -41,10 +38,6 @@ export default function Dashboard() {
       setSelectedHotspot(null);
     }
   }, []);
-
-  if (isApiKeyMissing) {
-    return <ApiKeyWarning />;
-  }
 
   return (
     <SidebarProvider>
