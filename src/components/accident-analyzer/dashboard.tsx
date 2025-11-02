@@ -42,6 +42,10 @@ export default function Dashboard() {
     }
   }, []);
 
+  if (isApiKeyMissing) {
+    return <ApiKeyWarning />;
+  }
+
   return (
     <SidebarProvider>
       <div className="relative min-h-screen">
@@ -54,21 +58,16 @@ export default function Dashboard() {
             onParamsChange={setParams}
             onRunAnalysis={handleRunAnalysis}
             isAnalyzing={isAnalyzing}
-            isApiKeyMissing={isApiKeyMissing}
           />
         </Sidebar>
         <SidebarInset>
           <div className="relative h-screen w-full">
-            {isApiKeyMissing ? (
-              <ApiKeyWarning />
-            ) : (
-              <MapView
-                region={region}
-                hotspots={hotspots}
-                selectedHotspot={selectedHotspot}
-                onHotspotClick={setSelectedHotspot}
-              />
-            )}
+            <MapView
+              region={region}
+              hotspots={hotspots}
+              selectedHotspot={selectedHotspot}
+              onHotspotClick={setSelectedHotspot}
+            />
             {selectedHotspot && (
               <div className="absolute top-4 right-4 z-10 w-full max-w-sm">
                 <HotspotDetails

@@ -26,7 +26,6 @@ interface SidebarControlsProps {
   onParamsChange: (params: { epsilon: number; minPts: number }) => void;
   onRunAnalysis: () => void;
   isAnalyzing: boolean;
-  isApiKeyMissing: boolean;
 }
 
 export default function SidebarControls({
@@ -37,7 +36,6 @@ export default function SidebarControls({
   onParamsChange,
   onRunAnalysis,
   isAnalyzing,
-  isApiKeyMissing,
 }: SidebarControlsProps) {
   const [open, setOpen] = React.useState(false)
 
@@ -64,7 +62,6 @@ export default function SidebarControls({
                 role="combobox"
                 aria-expanded={open}
                 className="w-full justify-between"
-                disabled={isApiKeyMissing}
               >
                 {selectedRegion
                   ? regions.find((region) => region.id === selectedRegion.id)?.name
@@ -121,7 +118,6 @@ export default function SidebarControls({
                 step={0.05}
                 value={[params.epsilon]}
                 onValueChange={(value) => onParamsChange({ ...params, epsilon: value[0] })}
-                disabled={isApiKeyMissing}
               />
             </div>
             <div className="space-y-2">
@@ -136,7 +132,6 @@ export default function SidebarControls({
                 step={1}
                 value={[params.minPts]}
                 onValueChange={(value) => onParamsChange({ ...params, minPts: value[0] })}
-                disabled={isApiKeyMissing}
               />
             </div>
           </div>
@@ -146,7 +141,7 @@ export default function SidebarControls({
           <Button
             className="w-full"
             onClick={onRunAnalysis}
-            disabled={isAnalyzing || isApiKeyMissing}
+            disabled={isAnalyzing}
             size="lg"
           >
             {isAnalyzing ? 'Analyzing...' : 'Run Analysis'}
