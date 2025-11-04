@@ -96,21 +96,12 @@ const mapStyles = [
 
 const MapControls = () => {
     const map = useMap();
-    const [zoom, setZoom] = useState(map?.getZoom() || 10);
-
-    const onZoom = (level: number) => {
-        const newZoom = (map?.getZoom() ?? 10) + level;
-        map?.setZoom(newZoom);
-        setZoom(newZoom);
-    }
     
-    React.useEffect(() => {
+    const onZoom = (level: number) => {
         if (!map) return;
-        const listener = map.addListener('zoom_changed', () => {
-            setZoom(map.getZoom() ?? 10);
-        });
-        return () => google.maps.event.removeListener(listener);
-    }, [map]);
+        const newZoom = (map.getZoom() ?? 10) + level;
+        map.setZoom(newZoom);
+    }
 
     return (
         <div className="absolute bottom-4 right-4 z-10 flex flex-col gap-2">
@@ -166,8 +157,8 @@ export default function MapView({ region, hotspots, selectedHotspot, onHotspotCl
             </AdvancedMarker>
           );
         })}
+        <MapControls />
       </Map>
-      <MapControls />
     </APIProvider>
   );
 }
