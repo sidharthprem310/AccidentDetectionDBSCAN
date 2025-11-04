@@ -112,13 +112,13 @@ export default function SidebarControls({
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <Label htmlFor="epsilon">Epsilon (ε) - Max Distance</Label>
-                <span className="text-sm font-medium text-primary">{params.epsilon.toFixed(0)}m</span>
+                <span className="text-sm font-medium text-primary">{params.epsilon.toFixed(2)}km</span>
               </div>
               <Slider
                 id="epsilon"
-                min={10}
-                max={100}
-                step={5}
+                min={0.1}
+                max={2}
+                step={0.05}
                 value={[params.epsilon]}
                 onValueChange={(value) => onParamsChange({ ...params, epsilon: value[0] })}
               />

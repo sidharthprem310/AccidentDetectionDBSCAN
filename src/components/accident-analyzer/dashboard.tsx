@@ -8,7 +8,6 @@ import HotspotDetails from '@/components/accident-analyzer/hotspot-details';
 import { accidentData, regions, simulateDbscan } from '@/lib/data';
 import type { Region, Hotspot } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
-import ApiKeyWarning from '@/components/accident-analyzer/api-key-warning';
 
 const defaultParams = { epsilon: 0.5, minPts: 5 };
 
@@ -19,14 +18,11 @@ export default function Dashboard() {
   const [selectedHotspot, setSelectedHotspot] = useState<Hotspot | null>(null);
   const [isAnalyzing, startAnalysis] = useTransition();
   const { toast } = useToast();
-  const isApiKeyMissing = !process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
 
   const handleRunAnalysis = useCallback(() => {
     startAnalysis(() => {
       const points = accidentData[region.id];
-      // The epsilon in the slider is in meters, but the function expects km.
-      const newHotspots = simulateDbscan(points, params.epsilon / 1000, params.minPts);
+      const newHotspots = simulateDbscan(points, params.epsilon, params.minPts);
       setHotspots(newHotspots);
       setSelectedHotspot(null);
       toast({
@@ -52,10 +48,6 @@ export default function Dashboard() {
         description: "DBSCAN parameters have been reset to their default values.",
       });
   }, [toast]);
-
-  if (isApiKeyMissing) {
-    return <ApiKeyWarning />;
-  }
 
   return (
     <SidebarProvider>
