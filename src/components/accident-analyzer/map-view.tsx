@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { APIProvider, Map, AdvancedMarker, useMap } from '@vis.gl/react-google-maps';
 import type { Region, Hotspot } from '@/lib/types';
 import { Button } from '../ui/button';
@@ -97,11 +97,11 @@ const mapStyles = [
 const MapControls = () => {
     const map = useMap();
     
-    const onZoom = (level: number) => {
+    const onZoom = useCallback((level: number) => {
         if (!map) return;
         const newZoom = (map.getZoom() ?? 10) + level;
         map.setZoom(newZoom);
-    }
+    }, [map]);
 
     return (
         <div className="absolute bottom-4 right-4 z-10 flex flex-col gap-2">
