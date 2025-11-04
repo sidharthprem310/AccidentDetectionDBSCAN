@@ -117,7 +117,7 @@ export default function SidebarControls({
               <Slider
                 id="epsilon"
                 min={0.1}
-                max={2}
+                max={3}
                 step={0.05}
                 value={[params.epsilon]}
                 onValueChange={(value) => onParamsChange({ ...params, epsilon: value[0] })}
