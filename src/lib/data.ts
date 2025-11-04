@@ -78,23 +78,49 @@ export const simulateDbscan = (points: Accident[], epsilon: number, minPts: numb
     const neighbors = points.filter(p => getDistance(point.lat, point.lng, p.lat, p.lng) < epsilon);
 
     if (neighbors.length >= minPts) {
-      neighbors.forEach(n => clusteredPoints.add(n.id));
       
-      const latSum = neighbors.reduce((sum, p) => sum + p.lat, 0);
-      const lngSum = neighbors.reduce((sum, p) => sum + p.lng, 0);
-      const severitySum = neighbors.reduce((sum, p) => sum + p.severity, 0);
-      
-      const allFactors = new Set(neighbors.flatMap(p => p.factors));
+      const clusterAccidents: Accident[] = [];
+      const queue = [...neighbors];
+      const clusterPointsIds = new Set(neighbors.map(n => n.id));
 
-      hotspots.push({
-        id: `hotspot-${hotspotId++}`,
-        lat: latSum / neighbors.length,
-        lng: lngSum / neighbors.length,
-        accidentCount: neighbors.length,
-        averageSeverity: parseFloat((severitySum / neighbors.length).toFixed(2)),
-        contributingFactors: Array.from(allFactors).join(', '),
-        accidents: neighbors,
-      });
+      while(queue.length > 0) {
+        const currentPoint = queue.shift()!;
+        if(!clusteredPoints.has(currentPoint.id)) {
+          clusteredPoints.add(currentPoint.id);
+          clusterAccidents.push(currentPoint);
+
+          const currentNeighbors = points.filter(p => getDistance(currentPoint.lat, currentPoint.lng, p.lat, p.lng) < epsilon);
+          if (currentNeighbors.length >= minPts) {
+            currentNeighbors.forEach(newNeighbor => {
+              if (!clusterPointsIds.has(newNeighbor.id)) {
+                clusterPointsIds.add(newNeighbor.id);
+                queue.push(newNeighbor);
+              }
+            });
+          }
+        }
+      }
+
+      if (clusterAccidents.length < minPts) continue;
+      
+      const latSum = clusterAccidents.reduce((sum, p) => sum + p.lat, 0);
+      const lngSum = clusterAccidents.reduce((sum, p) => sum + p.lng, 0);
+      const severitySum = clusterAccidents.reduce((sum, p) => sum + p.severity, 0);
+      
+      const allFactors = new Set(clusterAccidents.flatMap(p => p.factors));
+
+      const isHighSeverityHotspot = clusterAccidents.filter(p => p.severity >= 4).length >= minPts;
+      if (clusterAccidents.length >= 4 || isHighSeverityHotspot) {
+        hotspots.push({
+          id: `hotspot-${hotspotId++}`,
+          lat: latSum / clusterAccidents.length,
+          lng: lngSum / clusterAccidents.length,
+          accidentCount: clusterAccidents.length,
+          averageSeverity: parseFloat((severitySum / clusterAccidents.length).toFixed(2)),
+          contributingFactors: Array.from(allFactors).join(', '),
+          accidents: clusterAccidents,
+        });
+      }
     }
   }
 

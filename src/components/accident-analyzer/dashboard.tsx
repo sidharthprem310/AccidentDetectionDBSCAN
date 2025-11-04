@@ -10,9 +10,11 @@ import type { Region, Hotspot } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import ApiKeyWarning from '@/components/accident-analyzer/api-key-warning';
 
+const defaultParams = { epsilon: 0.5, minPts: 5 };
+
 export default function Dashboard() {
   const [region, setRegion] = useState<Region>(regions[0]);
-  const [params, setParams] = useState({ epsilon: 0.5, minPts: 5 });
+  const [params, setParams] = useState(defaultParams);
   const [hotspots, setHotspots] = useState<Hotspot[]>([]);
   const [selectedHotspot, setSelectedHotspot] = useState<Hotspot | null>(null);
   const [isAnalyzing, startAnalysis] = useTransition();
@@ -23,7 +25,8 @@ export default function Dashboard() {
   const handleRunAnalysis = useCallback(() => {
     startAnalysis(() => {
       const points = accidentData[region.id];
-      const newHotspots = simulateDbscan(points, params.epsilon, params.minPts);
+      // The epsilon in the slider is in meters, but the function expects km.
+      const newHotspots = simulateDbscan(points, params.epsilon / 1000, params.minPts);
       setHotspots(newHotspots);
       setSelectedHotspot(null);
       toast({
@@ -42,6 +45,18 @@ export default function Dashboard() {
     }
   }, []);
 
+  const handleResetParams = useCallback(() => {
+    setParams(defaultParams);
+     toast({
+        title: "Parameters Reset",
+        description: "DBSCAN parameters have been reset to their default values.",
+      });
+  }, [toast]);
+
+  if (isApiKeyMissing) {
+    return <ApiKeyWarning />;
+  }
+
   return (
     <SidebarProvider>
       <div className="relative grid min-h-screen w-full md:grid-cols-[350px_1fr]">
@@ -53,18 +68,17 @@ export default function Dashboard() {
             params={params}
             onParamsChange={setParams}
             onRunAnalysis={handleRunAnalysis}
+            onResetParams={handleResetParams}
             isAnalyzing={isAnalyzing}
           />
         </Sidebar>
-        <div className="relative flex h-screen flex-col">
-            {isApiKeyMissing ? <ApiKeyWarning /> : (
-              <MapView
-                region={region}
-                hotspots={hotspots}
-                selectedHotspot={selectedHotspot}
-                onHotspotClick={setSelectedHotspot}
-              />
-            )}
+        <div className="relative flex h-dvh flex-col">
+            <MapView
+              region={region}
+              hotspots={hotspots}
+              selectedHotspot={selectedHotspot}
+              onHotspotClick={setSelectedHotspot}
+            />
             {selectedHotspot && (
               <div className="absolute top-4 right-4 z-10 w-full max-w-sm">
                 <HotspotDetails
