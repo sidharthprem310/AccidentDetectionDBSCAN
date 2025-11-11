@@ -1,5 +1,5 @@
-# Firebase Studio
+# Accident Detection Using DBSCAN
 
-This is a NextJS starter in Firebase Studio.
+This is a project for demonstrating the accident detection analysis using DBSCAN Clustering.
 
-To get started, take a look at src/app/page.tsx.
+The project is implemented as an interactive NextJS web application using Google Firebase Studio, along with Google Maps Web API and Google Gemini AI integration.
